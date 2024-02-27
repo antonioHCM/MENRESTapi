@@ -8,10 +8,10 @@ const productRoutes = require("./routes/product")
 
 require("dotenv-flow").config();
 
-//route
-app.get ("/api/welcome", (req, res) =>{
-    res.status(200).send({message: "Welcome to thhe MEN RESTful API"});
-});
+//Parse request Json
+app.use(bodyParser.json());
+
+
 
 mongoose.connect(
     process.env.DBHOST,
@@ -22,6 +22,12 @@ mongoose.connect(
 
 mongoose.connection.once('open', () => console.log('Connected to the MongoDB database.'));
 
+//route
+app.get ("/api/welcome", (req, res) =>{
+    res.status(200).send({message: "Welcome to thhe MEN RESTful API"});
+});
+
+//product route
 app.use("/api/products", productRoutes);
 
 const PORT = process.env.PORT || 4000;

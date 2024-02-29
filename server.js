@@ -1,12 +1,18 @@
 const express = require ("express");
 const mongoose = require ("mongoose");
 const bodyParser = require ("body-parser");
+const swaggerUi = require("swagger-ui-express");
+const yaml = require('yamljs');
 const app = express();
 
 //import routes
 const productRoutes = require("./routes/product")
-
+const authRoutes = require("./routes/auth")
 require("dotenv-flow").config();
+
+//swagger
+const swaggerDefenition = yaml.load('./swagger.yaml');
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDefenition));
 
 //Parse request Json
 app.use(bodyParser.json());
@@ -29,6 +35,7 @@ app.get ("/api/welcome", (req, res) =>{
 
 //product route
 app.use("/api/products", productRoutes);
+app.use("/api/user", authRoutes);
 
 const PORT = process.env.PORT || 4000;
 

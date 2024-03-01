@@ -6,7 +6,7 @@ const yaml = require('yamljs');
 const app = express();
 
 //import routes
-const productRoutes = require("./routes/product")
+const workspaceRoutes = require("./routes/workspace")
 const authRoutes = require("./routes/auth")
 require("dotenv-flow").config();
 
@@ -33,8 +33,8 @@ app.get ("/api/welcome", (req, res) =>{
     res.status(200).send({message: "Welcome to thhe MEN RESTful API"});
 });
 
-//product route
-app.use("/api/products", productRoutes);
+// routes
+app.use("/api/workspace", workspaceRoutes);
 app.use("/api/user", authRoutes);
 
 const PORT = process.env.PORT || 4000;

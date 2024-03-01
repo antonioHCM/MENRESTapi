@@ -66,7 +66,6 @@ if (!user) {
     //auth token
     const token = jwt.sign
     (
-        //payload data
         {
             name: user.name,
             id: user._id

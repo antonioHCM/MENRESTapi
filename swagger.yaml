@@ -6,30 +6,15 @@ info:
 servers:
   - url: http://localhost:4000/api/
     description: Localhost development server 
-  - url: https://smsj-men-restapi.herokuapp.com/api/
-    description: Heroku remote server
 components:
-  securitySchemes:
-    ApiKeyAuth:        # arbitrary name for the security scheme
-      type: apiKey
-      in: header       # can be "header", "query" or "cookie"
-      name: auth-token
-
   schemas:
-    Product:
+    Workspace:
       type: object
       properties:
-        id:
-          type: string
+        workspaceId:
+          type: number
         name:
           type: string
-        description:
-          type: string
-        price:
-          type: number
-        inStock:
-          type: boolean
-    
     User:
       type: object
       properties:
@@ -42,9 +27,29 @@ components:
         date:
           type: string
 
-paths:
+  securitySchemes:
+    ApiKeyAuth:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: auth-token
 
-  /user/register:
+paths:
+  /api/welcome:
+    get:
+      summary: Welcome Message
+      description: Returns a welcome message.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/user/register:
     post:
       summary: Register a new User
       description: Register a new User in the database
@@ -57,7 +62,7 @@ paths:
 
       responses:
         201:
-          description: User created succesfully
+          description: User created successfully
           content:
             application/json:
               schema:
@@ -65,10 +70,10 @@ paths:
                 properties:
                   error:
                     type: string
-                  _id:
+                  data:
                     type: string
 
-  /user/login:
+  /api/user/login:
     post:
       summary: Login a User
       description: Login a User in order to get JWT token (auth-token)
@@ -86,7 +91,7 @@ paths:
       
       responses:
         200:
-          description: User logged in succesfully
+          description: User logged in successfully
           content:
             application/json:
               schema:
@@ -97,24 +102,23 @@ paths:
                   data:
                     type: string
 
-
-  /products:
+  /api/workspace:
     get:
-      summary: Retrieves a list of Products
-      description: Retrieves a list of products as JSON objects.
+      summary: Get all Workspaces
+      description: Retrieves a list of all Workspaces.
       responses:
-        200:
-          description: A list of product JSON objects in an array.
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
-    
+                  $ref: "#/components/schemas/Workspace"
+
     post:
-      summary: Create a new Product
-      description: Create a new Product
+      summary: Create a new Workspace
+      description: Create a new Workspace
       security:
         - ApiKeyAuth: []      
       requestBody:
@@ -122,47 +126,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/Workspace"
 
       responses:
         201:
-          description: Product created succesfully
+          description: Workspace created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/Workspace"
   
-  /products/{id}:
-    get:
-      summary: Specific Product
-      description: Retrieves a specific Product based on it id.
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: MongoDB id
-          schema:
-            type: string
-      responses:
-        200:
-          description: A Product in the format of a JSON object.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Product"
-   
+  /api/workspace/{workspaceId}:
     put:
-      summary: Updates a specific Product
-      description: Updates a specific Product based on it id
+      summary: Update a specific Workspace
+      description: Update a specific Workspace based on its id
       security:
         - ApiKeyAuth: []            
       parameters:
         - in: path
-          name: id
+          name: workspaceId
           required: true
-          description: MongoDB id
+          description: MongoDB id of the Workspace
           schema:
             type: string
       requestBody:
@@ -170,40 +154,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/Workspace"
 
       responses:
-        201:
-          description: Product updated succesfully
+        200:
+          description: Workspace updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/Workspace"
 
     delete:
-      summary: Deletes a specific Product
-      description: Deletes a specific Product based on it id
+      summary: Delete a specific Workspace
+      description: Delete a specific Workspace based on its id
       security:
         - ApiKeyAuth: []            
       parameters:
         - in: path
-          name: id
+          name: workspaceId
           required: true
-          description: MongoDB id
+          description: MongoDB id of the Workspace
           schema:
-            type: string      
+            type: string
 
       responses:
-        201:
-          description: Product deleted succesfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Product"
-
-  
-
-
-    
-
-    
+        204:
+          description: Workspace deleted successfully
